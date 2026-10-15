@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ShopyBuzz</title>
+<style>
+:root{--ink:#111827;--mut:#6b7280;--gold:#C9A96E;--line:#e5e7eb;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:#fff;color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.4}
+.app{display:flex;min-height:100vh}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:1px solid var(--line);padding:4px 2px calc(4px + env(safe-area-inset-bottom,0px));z-index:5}
+nav .logo{display:none}
+nav button{flex:1;background:none;border:0;color:var(--mut);font-size:11px;padding:6px 0;border-radius:10px;cursor:pointer}
+nav button b{display:block;font-size:19px}
+nav button.on{color:var(--ink);background:rgba(201,169,110,.25)}
+main{flex:1;padding:14px 14px 84px;max-width:1100px;margin:0 auto;width:100%}
+header{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+.brand{font-size:24px;font-weight:800}.brand span{color:var(--gold)}
+.tag{font-size:12px;color:var(--mut)}
+.card{border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+h2{margin:6px 0 8px;font-size:18px}h3{margin:0 0 6px;font-size:15px}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chip{border:1px solid var(--line);background:#fff;color:var(--ink);padding:8px 12px;border-radius:99px;cursor:pointer;font-size:13px}
+.chip.on{background:var(--ink);color:var(--gold);border-color:var(--ink)}
+.stores{display:flex;gap:12px;overflow-x:auto;padding:4px 2px 10px}
+.st{flex:none;text-align:center;cursor:pointer;width:66px;font-size:12px}
+.st i{display:flex;width:56px;height:56px;border-radius:50%;margin:0 auto 4px;align-items:center;justify-content:center;color:#fff;font-weight:800;font-style:normal;font-size:18px;border:3px solid transparent}
+.st.on i{border-color:var(--gold);box-shadow:0 0 0 2px var(--ink)}
+.pg{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.pc{border:1px solid var(--line);border-radius:14px;padding:8px;cursor:pointer}
+.im{height:104px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:44px}
+.nm{font-size:13px;margin:6px 0 2px;min-height:34px}.pz{font-weight:800}.sn{font-size:12px;font-weight:700}.rt{font-size:12px;color:var(--mut)}
+.row{display:flex;gap:8px}
+input[type=text],input[type=number]{flex:1;padding:12px;border-radius:12px;border:1px solid var(--line);font-size:15px;min-width:0;width:100%}
+.btn{background:var(--gold);color:var(--ink);border:0;padding:11px 16px;border-radius:12px;font-weight:700;cursor:pointer;font-size:14px}
+.btn.alt{background:var(--ink);color:var(--gold)}
+.sw{display:inline-block;width:30px;height:30px;border-radius:50%;border:2px solid var(--line);margin:0 4px 6px 0;cursor:pointer}
+.sw.on{outline:3px solid var(--gold)}
+.try{display:grid;gap:12px}
+#cv{background:linear-gradient(#f3f4f6,#e5e7eb);border-radius:16px;height:380px;display:flex;align-items:center;justify-content:center;color:var(--mut);touch-action:none;overflow:hidden}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+label{display:block;font-size:13px;color:var(--mut);margin:8px 0 3px}
+input[type=range]{width:100%;accent-color:#C9A96E}
+.note{font-size:12px;color:var(--mut)}
+#msgs{min-height:55vh;display:flex;flex-direction:column;gap:10px;padding-bottom:10px}
+.bb{max-width:86%;padding:10px 14px;border-radius:16px;font-size:14px}
+.bb.u{align-self:flex-end;background:var(--ink);color:#fff;border-bottom-right-radius:4px}
+.bb.a{align-self:flex-start;background:#f3f4f6;border-bottom-left-radius:4px}
+.bar{position:sticky;bottom:62px;background:#fff;padding:8px 0;display:flex;gap:8px}
+.wel{text-align:center;padding:30px 0 10px}
+.cmp{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px dashed var(--line);font-size:13px}
+.best{color:#0a8a4a;font-weight:700}
+.li{padding:14px 4px;border-bottom:1px solid var(--line)}
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:var(--ink);color:var(--gold);padding:10px 16px;border-radius:12px;display:none;z-index:20;font-size:14px;max-width:90%}
+#sheet{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:flex-end;justify-content:center;z-index:15}
+#sheet.on{display:flex}
+#sh{background:#fff;width:100%;max-width:500px;max-height:88vh;overflow:auto;border-radius:20px 20px 0 0;padding:18px 18px calc(18px + env(safe-area-inset-bottom,0px))}
+.sec{display:none}.sec.on{display:block}
+@media(min-width:900px){
+nav{position:sticky;top:0;height:100vh;border-top:0;border-right:1px solid var(--line);flex-direction:column;width:200px;padding:20px 12px;gap:6px;flex:none}
+nav .logo{display:block;font-size:22px;font-weight:800;margin-bottom:18px;padding-left:8px}nav .logo span{color:var(--gold)}
+nav button{flex:none;text-align:left;font-size:15px;padding:12px;display:flex;gap:10px;align-items:center}nav button b{display:inline;font-size:18px}
+main{padding:24px 28px}header .brand{display:none}
+.pg{grid-template-columns:repeat(4,1fr)}.try{grid-template-columns:1.1fr 1fr}.bar{bottom:0}
+#sheet{align-items:center}#sh{border-radius:20px}#toast{bottom:30px}}
+</style></head><body>
+<div class="app">
+<nav><div class="logo">Shopy<span>Buzz</span></div>
+<button data-t="h" class="on"><b>🏠</b>Home</button>
+<button data-t="s"><b>🔍</b>Search</button>
+<button data-t="ai"><b>✨</b>AI Chat</button>
+<button data-t="v"><b>🤳</b>Try-On</button>
+<button data-t="ac"><b>👤</b>Account</button></nav>
+<main>
+<header><div class="brand">Shopy<span>Buzz</span></div><div class="tag">Try it. Style it. Buy it.</div></header>
+
+<section class="sec on" id="h"><div class="stores" id="stores"></div><h2 id="ht"></h2><div class="pg" id="pg"></div></section>
+
+<section class="sec" id="s"><div class="row"><input type="text" id="sq" placeholder="Product, app ya category dhundho..."></div><h2 id="sh2" style="margin-top:14px">Sabhi products</h2><div class="pg" id="sg"></div></section>
+
+<section class="sec" id="ai"><div id="msgs"></div><div class="bar"><input type="text" id="ci" placeholder="Kuch bhi poocho: outfit, color, price..."><button class="btn" id="cs">➤</button></div></section>
+
+<section class="sec" id="v"><div class="try"><div>
+<div id="stage" style="background:#f3f4f6;border-radius:16px;min-height:300px;display:flex;align-items:center;justify-content:center;padding:8px"><div id="ph" class="note" style="text-align:center;padding:30px">📷 Apni photo upload karo<br>(seedha face dikhe, achhi roshni mein)</div><canvas id="cvs" style="display:none;max-width:100%;max-height:70vh;border-radius:12px"></canvas></div>
+<div class="row" style="margin-top:8px"><label class="btn" style="flex:1;text-align:center;margin:0;color:#111827">📁 Photo chuno<input type="file" id="up" accept="image/*" hidden></label><label class="btn alt" style="flex:1;text-align:center;margin:0;color:#C9A96E">🤳 Camera se lo<input type="file" id="cam" accept="image/*" capture="user" hidden></label></div>
+<p class="note" id="lm">Photo sirf aapke phone mein rehti hai, kahin upload nahi hoti.</p>
+<div id="adj" style="display:none"><label>Left / Right</label><input type="range" id="ax" min="-30" max="30" value="0"><label>Upar / Neeche</label><input type="range" id="ay" min="-30" max="30" value="0"><label>Size</label><input type="range" id="as" min="60" max="140" value="100"></div></div>
+<div class="card"><h2>Meri Try-On</h2>
+<label>Abhi laga hua</label><div id="wear" class="chips"></div>
+<div class="chips" style="margin-top:10px"><button class="chip" id="rs">↺ Sab hatao</button><button class="chip" id="del">🗑️ Photo hatao</button></div>
+<label>Skin tone (color suggestions ke liye)</label><div id="tone"></div>
+<div class="two"><div><label>Height (cm)</label><input type="number" id="hh" min="120" max="220" value="170"></div><div><label>Weight (kg)</label><input type="number" id="ww" min="30" max="150" value="65"></div></div>
+<p class="note" id="sz"></p>
+<p class="note" style="margin-top:10px">Chashma, lipstick, bindi, bali aur necklace abhi try ho sakte hain. Kapdon ka AI try-on aur bracelet/payal baad mein aayenge.</p></div></div></section>
+
+<section class="sec" id="ac"><div class="card"><h2>👤 Mera Account</h2><p class="note">Guest user. Login karne par saved looks aur orders yahan dikhenge.</p><button class="btn alt" data-toast="Login jald aayega">Login / Sign up</button></div>
+<div class="card"><div class="li">❤️ Wishlist</div><div class="li">💾 Saved Looks</div><div class="li">📦 My Orders</div><div class="li">🔔 Price Alerts</div><div class="li">🌐 Language: Hindi / English</div><div class="li" style="border:0">🔒 Privacy aur Data</div></div></section>
+</main></div>
+<div id="sheet"><div id="sh"></div></div><div id="toast"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const STORES={Amazon:"#FF9900",Flipkart:"#2874F0",Meesho:"#9F2089",Myntra:"#FF3F6C",Shopsy:"#E8A200"};
+const PR=`Cotton Kurta Set|👘|set|#2457C5|#EFE3C8|Amazon|1299|4.3|2140
+Cotton Kurta Set|👘|set|#2457C5|#EFE3C8|Flipkart|1199|4.1|3320
+Cotton Kurta Set|👘|set|#2457C5|#EFE3C8|Meesho|999|3.9|8750
+Satin Party Shirt|👔|top|#7A1F3D|#000|Myntra|799|4.2|1560
+Satin Party Shirt|👔|top|#7A1F3D|#000|Amazon|899|4.4|980
+Satin Party Shirt|👔|top|#7A1F3D|#000|Shopsy|879|4.0|410
+Sequin Co-ord Set|👗|set|#1E4FD8|#1a1a2e|Myntra|1899|4.1|640
+Sequin Co-ord Set|👗|set|#1E4FD8|#1a1a2e|Flipkart|1749|3.9|1120
+Denim Jacket|🧥|top|#2d4a7a|#000|Flipkart|1499|4.2|2300
+Denim Jacket|🧥|top|#2d4a7a|#000|Meesho|1199|3.8|5100
+Slim Fit Chinos|👖|bot|#8a7a5c|#8a7a5c|Amazon|999|4.3|3400
+Slim Fit Chinos|👖|bot|#8a7a5c|#8a7a5c|Shopsy|849|4.0|900
+Round Tee|👕|top|#0E7C86|#000|Meesho|349|3.9|12400
+Round Tee|👕|top|#0E7C86|#000|Myntra|449|4.2|2100
+Aviator Sunglasses|🕶️|gl|#222|#222|Flipkart|459|4.1|1800
+Aviator Sunglasses|🕶️|gl|#222|#222|Meesho|399|3.8|3900
+Matte Lipstick|💄|lip|#B3203B|#B3203B|Amazon|349|4.4|5200
+Matte Lipstick|💄|lip|#B3203B|#B3203B|Shopsy|319|4.0|760
+Gold Hoop Earrings|✨|er|#D4AF37|#D4AF37|Meesho|199|4.0|6100
+Gold Hoop Earrings|✨|er|#D4AF37|#D4AF37|Amazon|299|4.3|1900
+Red Bindi Pack|🔴|bn|#C1121F|#C1121F|Amazon|99|4.5|3200
+Red Bindi Pack|🔴|bn|#C1121F|#C1121F|Meesho|79|4.1|7700
+Pearl Necklace|📿|nk|#F4F1EA|#F4F1EA|Myntra|599|4.2|840
+Pearl Necklace|📿|nk|#F4F1EA|#F4F1EA|Flipkart|549|4.0|1200
+Kundan Bracelet|⌚|br|#D4AF37|#D4AF37|Flipkart|399|4.1|1500
+Kundan Bracelet|⌚|br|#D4AF37|#D4AF37|Shopsy|349|3.9|600
+Silver Payal Anklet|🔗|an|#C0C0C0|#C0C0C0|Meesho|249|4.2|4300
+Silver Payal Anklet|🔗|an|#C0C0C0|#C0C0C0|Amazon|349|4.4|1100`.split("\n").map(l=>{const a=l.split("|");return{n:a[0],e:a[1],t:a[2],c1:a[3],c2:a[4],s:a[5],p:+a[6],r:+a[7],c:+a[8]}});
+const DESC={"Cotton Kurta Set":"Aaramdayak cotton kurta, pajama ke saath. Festival aur casual dono ke liye.","Satin Party Shirt":"Chamakdaar satin shirt, party aur evening look ke liye.","Sequin Co-ord Set":"Sequin work wala co-ord set, party mein alag dikhne ke liye.","Denim Jacket":"Classic denim jacket, har outfit ke upar achhi lagti hai.","Slim Fit Chinos":"Slim fit chinos, office aur casual dono mein chalte hain.","Round Tee":"Soft cotton round neck tee, roz pehnne ke liye.","Aviator Sunglasses":"Classic aviator frame, UV protection ke saath.","Matte Lipstick":"Matte finish lipstick, lambe time tak tikne wali.","Gold Hoop Earrings":"Gold-tone hoop bali, ethnic aur western dono ke saath.","Red Bindi Pack":"Lal bindi ka pack, shaadi aur festival ke liye.","Pearl Necklace":"Moti ka haar, gale par elegant look deta hai.","Kundan Bracelet":"Kundan work wala bracelet, shaadi aur festival ke liye.","Silver Payal Anklet":"Silver-tone payal, chhoti ghungroo ke saath."};
+const PAL=[[["Navy","#1F3A6E"],["Emerald","#0B6E4F"],["Burgundy","#7A1F3D"],["Lavender","#8E7CC3"]],[["Maroon","#800020"],["Teal","#0E7C86"],["Mustard","#D4A017"],["Olive","#6B7A2F"]],[["Royal Blue","#2457C5"],["Coral","#E8624F"],["Emerald","#0B6E4F"],["Mustard","#D4A017"]],[["Fuchsia","#C2185B"],["Cobalt","#1E4FD8"],["Gold","#E0A526"],["Ivory","#F4F1EA"]]];
+const TONES=[["Porcelain","#F8E0D0",0],["Fair","#F3D2B8",0],["Light","#EBC3A0",1],["Wheatish","#D9A877",1],["Golden","#C98F5B",2],["Tan","#B07A4F",2],["Olive","#9A7B4F",2],["Brown","#8A5A3A",3],["Cocoa","#6B4429",3],["Deep","#4E2F1E",3]];
+const D={top:"#e5e7eb",bot:"#374151"},ACC=["gl","lip","er","bn","nk","br","an"];
+const A={h:170,w:65,tone:3,top:D.top,bot:D.bot,acc:{},worn:[],store:null,fx:0,fy:0,fs:100};
+let R=null;
+const toast=t=>{const e=$("#toast");e.textContent=t;e.style.display="block";clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display="none",2200)};
+const fc=n=>n>=1000?(n/1000).toFixed(1)+"k":n;
+const cheap=n=>{let b=-1;PR.forEach((p,i)=>{if(p.n==n&&(b<0||p.p<PR[b].p))b=i});return b};
+
+function card(i){const p=PR[i];return `<div class="pc" data-p="${i}"><div class="im" style="background:${p.c1}22">${p.e}</div><div class="nm">${p.n}</div><div class="pz">₹${p.p}</div><div class="sn" style="color:${STORES[p.s]}">${p.s}</div><div class="rt">⭐ ${p.r} (${fc(p.c)})</div></div>`}
+function home(){$("#stores").innerHTML=`<div class="st ${A.store?"":"on"}" data-s=""><i style="background:#111827">All</i>Sabhi</div>`+Object.entries(STORES).map(([k,c])=>`<div class="st ${A.store==k?"on":""}" data-s="${k}"><i style="background:${c}">${k[0]}</i>${k}</div>`).join("");
+$("#ht").textContent=A.store?A.store+" ke products":"Sabhi apps ke products";$("#pg").innerHTML=PR.map((p,i)=>A.store&&p.s!=A.store?"":card(i)).join("")}
+function search(){const q=$("#sq").value.toLowerCase().trim(),r=PR.map((p,i)=>i).filter(i=>!q||(PR[i].n+" "+PR[i].s).toLowerCase().includes(q));
+$("#sh2").textContent=q?`"${q}" ke results (${r.length})`:"Sabhi products";$("#sg").innerHTML=r.length?r.map(card).join(""):`<p class="note">Kuch nahi mila. Doosra naam try karo.</p>`}
+
+function sheet(i){const p=PR[i],rows=PR.filter(x=>x.n==p.n).sort((a,b)=>a.p-b.p),m=rows[0].p;
+$("#sh").innerHTML=`<div class="row" style="align-items:center"><div class="im" style="width:84px;height:84px;font-size:38px;flex:none;background:${p.c1}22">${p.e}</div><div><h3>${p.n}</h3><div class="pz" style="font-size:20px">₹${p.p}</div><div class="sn" style="color:${STORES[p.s]}">${p.s}</div></div></div>
+<button class="btn alt" style="width:100%;margin-top:14px;padding:14px" data-try="${i}">🧍 Try On (meri photo par)</button>
+<h3 style="margin-top:16px">Description</h3><p class="note" style="font-size:13px">${DESC[p.n]}</p>
+<h3 style="margin-top:12px">Kis app mein kitni rating aur price</h3>`+rows.map(x=>`<div class="cmp"><span><b style="color:${STORES[x.s]}">${x.s}</b><br><span class="rt">⭐ ${x.r} (${fc(x.c)} ratings)</span></span><span style="text-align:right"><b>₹${x.p}</b><br>${x.p==m?'<span class="best">Sabse sasta</span>':`<span class="rt">+₹${x.p-m} zyada</span>`}</span></div>`).join("")+`<button class="btn" style="width:100%;margin-top:14px;padding:14px" data-toast="Yahan ${p.s} ka affiliate link khulega">🛒 ${p.s} par kharido</button>`;$("#sheet").classList.add("on")}
+function wear(i){const p=PR[i];$("#sheet").classList.remove("on");tab("v");if(["set","top","bot"].includes(p.t)){toast("Kapdon ka asli AI try-on jald aayega (Phase 2)");return}if(p.t=="br"||p.t=="an"){toast("Bracelet/payal ke liye haath/pair ki photo wala try-on aage aayega");return}A.acc[p.t]=p.c1;const n=p.e+" "+p.n;A.worn=A.worn.filter(x=>x!=n).concat(n);if(!IMG)toast("Pehle apni photo upload karo");upd()}
+
+const CH=[];const esc=s=>s.replace(/[<>&]/g,"");
+function chat(){$("#msgs").innerHTML=CH.length?CH.map(m=>`<div class="bb ${m.r}">${m.t}${m.ids?`<div class="chips" style="margin-top:8px">${m.ids.map(i=>`<button class="chip" data-p="${i}">${PR[i].e} ${PR[i].n}</button>`).join("")}</div>`:""}</div>`).join(""):`<div class="wel"><div style="font-size:40px">✨</div><h2>Aaj kya pehenna hai?</h2><p class="note">Main aapka AI stylist hoon. Occasion, color ya budget poochho.</p><div class="chips" style="justify-content:center">${["Kal party hai, kya pehnu?","Shaadi ke liye outfit","Office ke liye kya acha rahega?","Sabse sasta kya hai?"].map(t=>`<button class="chip" data-ex="${t}">${t}</button>`).join("")}</div></div>`;if(CH.length)scrollTo(0,document.body.scrollHeight)}
+function reply(v){v=v.toLowerCase();const pal=PAL[TONES[A.tone][2]],cl=`Aapke skin tone (${TONES[A.tone][0]}) par ${pal[0][0]}, ${pal[1][0]} aur ${pal[2][0]} achhe lagte hain.`;
+const S={wedding:["Shaadi ke liye rich colors aur gold jewellery best rahegi.",["Cotton Kurta Set","Kundan Bracelet","Pearl Necklace","Red Bindi Pack","Silver Payal Anklet"]],festival:["Festival ke liye kurta set ke saath bali aur bindi achhi lagegi.",["Cotton Kurta Set","Gold Hoop Earrings","Red Bindi Pack","Kundan Bracelet"]],office:["Office ke liye simple, neutral aur fitted kapde chuno.",["Slim Fit Chinos","Satin Party Shirt","Aviator Sunglasses"]],party:["Party ke liye thoda shiny aur bold look rakho.",["Sequin Co-ord Set","Satin Party Shirt","Gold Hoop Earrings","Matte Lipstick"]],casual:["Casual mein comfort pehle, phir color match.",["Round Tee","Denim Jacket","Slim Fit Chinos","Aviator Sunglasses"]]};
+let k=/shad|wedding|sangeet|mehndi/.test(v)?"wedding":/diwali|eid|holi|festival|puja|navratri/.test(v)?"festival":/office|meeting|interview/.test(v)?"office":/party|club|birthday/.test(v)?"party":/casual|college|roz/.test(v)?"casual":"";
+if(k)return{t:S[k][0]+" "+cl+" Ye try karke dekho:",ids:S[k][1].map(cheap)};
+if(/sasta|cheap|price|budget|best/.test(v)){const u=[...new Set(PR.map(p=>p.n))].map(cheap).sort((a,b)=>PR[a].p-PR[b].p).slice(0,4);return{t:"Sabse sasta options ye hain:",ids:u}}
+if(/color|colour|rang/.test(v))return{t:cl+" Neutral shades (white, black, beige) har color ke saath chal jaate hain."};
+return{t:"Main outfit, color combination aur price mein madad kar sakta hoon. Jaise: \"Kal party hai, kya pehnu?\" ya \"Shaadi ke liye outfit\". (Ye demo hai, asli app mein poora AI chalega.)"}}
+function send(t){t=t.trim();if(!t)return;CH.push({r:"u",t:esc(t)});$("#ci").value="";chat();setTimeout(()=>{CH.push({r:"a",...reply(t)});chat()},500)}
+
+const LO=[61,185,40,39,37,0,267,269,270,409,291,375,321,405,314,17,84,181,91,146],LI=[78,191,80,81,82,13,312,311,310,415,308,324,318,402,317,14,87,178,88,95];
+let LM=null,LMS="idle",IMG=null,LMK=null;
+const mid=(a,b)=>({x:(a.x+b.x)/2,y:(a.y+b.y)/2}),dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
+async function loadLM(){if(LMS!="idle")return;LMS="loading";try{const B="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14",m=await import(B+"/+esm"),fs=await m.FilesetResolver.forVisionTasks(B+"/wasm");LM=await m.FaceLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:"https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"},runningMode:"IMAGE",numFaces:1});LMS="ok"}catch(e){LMS="fail"}}
+const ell=(c,rx,ry,n=16)=>Array.from({length:n},(_,i)=>({x:c.x+rx*Math.cos(i/n*6.2832),y:c.y+ry*Math.sin(i/n*6.2832)}));
+function keys(W,H){if(LMK){const p=i=>({x:LMK[i].x*W,y:LMK[i].y*H}),eL=mid(p(33),p(133)),eR=mid(p(362),p(263));return{eL,eR,ew:dist(eL,eR),roll:Math.atan2(eR.y-eL.y,eR.x-eL.x),brow:p(9),earL:p(234),earR:p(454),chin:p(152),fw:dist(p(234),p(454)),lo:LO.map(p),li:LI.map(p)}}
+const cx=W*(.5+A.fx/100),cy=H*(.4+A.fy/100),fw=W*.42*A.fs/100,m={x:cx,y:cy+fw*.38};
+return{eL:{x:cx-fw*.22,y:cy-fw*.08},eR:{x:cx+fw*.22,y:cy-fw*.08},ew:fw*.44,roll:0,brow:{x:cx,y:cy-fw*.28},earL:{x:cx-fw*.5,y:cy},earR:{x:cx+fw*.5,y:cy},chin:{x:cx,y:cy+fw*.62},fw,lo:ell(m,fw*.2,fw*.07),li:ell(m,fw*.16,fw*.012)}}
+function draw(){if(!IMG)return;const cv=$("#cvs"),sc=Math.min(1,900/IMG.width),W=cv.width=Math.round(IMG.width*sc),H=cv.height=Math.round(IMG.height*sc),x=cv.getContext("2d");x.drawImage(IMG,0,0,W,H);const k=keys(W,H),a=A.acc,line=(q,i)=>i?x.lineTo(q.x,q.y):x.moveTo(q.x,q.y);
+if(a.lip){x.fillStyle=a.lip;x.globalAlpha=.75;x.beginPath();k.lo.forEach(line);x.closePath();k.li.forEach(line);x.closePath();x.fill("evenodd");x.globalAlpha=1}
+if(a.bn){x.fillStyle=a.bn;x.beginPath();x.arc(k.brow.x,k.brow.y,k.ew*.045,0,6.29);x.fill()}
+if(a.er){x.strokeStyle=a.er;x.fillStyle=a.er;x.lineWidth=k.ew*.025;[k.earL,k.earR].forEach(e=>{const y=e.y+k.fw*.14;x.beginPath();x.arc(e.x,y+k.ew*.07,k.ew*.07,0,6.29);x.stroke();x.beginPath();x.arc(e.x,y,k.ew*.025,0,6.29);x.fill()})}
+if(a.nk){x.fillStyle=a.nk;x.strokeStyle="rgba(0,0,0,.25)";x.lineWidth=1;for(let i=0;i<=18;i++){const t=i/18*Math.PI;x.beginPath();x.arc(k.chin.x-Math.cos(t)*k.fw*.5,k.chin.y+k.fw*.28+Math.sin(t)*k.fw*.3,k.fw*.022,0,6.29);x.fill();x.stroke()}}
+if(a.gl){x.strokeStyle="#222";x.lineWidth=k.ew*.035;x.fillStyle="rgba(20,20,30,.35)";[k.eL,k.eR].forEach(e=>{x.save();x.translate(e.x,e.y);x.rotate(k.roll);const w=k.ew*.5,h=k.ew*.36;x.beginPath();x.roundRect(-w/2,-h/2,w,h,h*.35);x.fill();x.stroke();x.restore()});const c=Math.cos(k.roll)*k.ew*.25,d=Math.sin(k.roll)*k.ew*.25;x.beginPath();x.moveTo(k.eL.x+c,k.eL.y+d);x.lineTo(k.eR.x-c,k.eR.y-d);x.stroke()}}
+function setImg(f){if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=async()=>{IMG=im;LMK=null;$("#ph").style.display="none";$("#cvs").style.display="block";$("#lm").textContent="Face dhundh raha hoon...";await loadLM();if(LM){try{const r=LM.detect(im);LMK=r.faceLandmarks&&r.faceLandmarks[0]||null}catch(e){LMK=null}}
+$("#adj").style.display=LMK?"none":"block";$("#lm").textContent=LMK?"Face mil gaya. Product chun kar Try On dabao.":(LMS=="fail"?"Auto face detection load nahi hua, isliye andaza se laga hai. Neeche ke sliders se sahi karo.":"Face nahi mila. Seedhi aur saaf photo try karo, ya neeche ke sliders use karo.");upd()};im.src=rd.result};rd.readAsDataURL(f)}
+function upd(){$("#tone").innerHTML=TONES.map((t,i)=>`<span class="sw ${A.tone==i?"on":""}" style="background:${t[1]}" data-k="${i}" title="${t[0]}"></span>`).join("");
+$("#wear").innerHTML=A.worn.length?A.worn.map(w=>`<span class="chip on">${w}</span>`).join(""):`<span class="note">Abhi kuch nahi laga.</span>`;
+$("#sz").textContent="Andaza se size: "+(A.w<55?"S":A.w<70?"M":A.w<85?"L":"XL")+" (sahi size ke liye brand ka size chart dekho)";draw()}
+function tab(t){$$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t));$$(".sec").forEach(s=>s.classList.toggle("on",s.id==t));scrollTo(0,0);if(t=="v")upd();if(t=="ai")chat()}
+
+document.addEventListener("click",e=>{if(e.target==$("#sheet")){$("#sheet").classList.remove("on");return}
+const t=e.target.closest("[data-t],[data-s],[data-p],[data-try],[data-toast],[data-k],[data-ex]");if(!t)return;const d=t.dataset;
+if(d.t)tab(d.t);else if(d.s!==undefined){A.store=d.s||null;home()}else if(d.p!==undefined)sheet(+d.p)
+else if(d.try!==undefined)wear(+d.try);else if(d.toast)toast(d.toast);else if(d.k!==undefined){A.tone=+d.k;upd()}else if(d.ex)send(d.ex)});
+$("#sq").oninput=search;$("#cs").onclick=()=>send($("#ci").value);$("#ci").onkeydown=e=>{if(e.key=="Enter")send(e.target.value)};
+$("#up").onchange=e=>setImg(e.target.files[0]);$("#cam").onchange=e=>setImg(e.target.files[0]);
+$("#hh").oninput=e=>{const v=+e.target.value;if(v>=120&&v<=220){A.h=v;upd()}};
+$("#ww").oninput=e=>{const v=+e.target.value;if(v>=30&&v<=150){A.w=v;upd()}};
+$("#ax").oninput=e=>{A.fx=+e.target.value;draw()};$("#ay").oninput=e=>{A.fy=+e.target.value;draw()};$("#as").oninput=e=>{A.fs=+e.target.value;draw()};
+$("#rs").onclick=()=>{A.acc={};A.worn=[];upd()};
+$("#del").onclick=()=>{IMG=null;LMK=null;$("#cvs").style.display="none";$("#ph").style.display="block";$("#adj").style.display="none";$("#lm").textContent="Photo hata di gayi.";upd()};
+home();search();
+</script></body></html>
