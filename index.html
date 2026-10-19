@@ -95,6 +95,11 @@ header{flex-direction:column;align-items:center;justify-content:center;gap:2px;t
 @keyframes fly{0%{opacity:0;transform:translateY(30px) scale(.4)}25%{opacity:1}100%{opacity:0;transform:translateY(-260px) scale(1.1)}}
 @keyframes wfade{from{opacity:0}to{opacity:1}}@keyframes wout{to{opacity:0}}
 @media(prefers-reduced-motion:reduce){#wel *{animation-duration:.01s!important;animation-delay:0s!important}}
+#ai{padding-bottom:80px}
+#ai .bar{position:fixed;left:0;right:0;bottom:calc(60px + env(safe-area-inset-bottom,0px));padding:8px 14px;background:#fff;border-top:1px solid var(--line);z-index:4}
+@media(min-width:900px){#ai .bar{left:200px;bottom:0;padding:10px 28px}}
+.bb.a{max-width:94%}.pcc{background:#fff;border:1px solid var(--line);border-radius:14px;padding:10px;margin-top:10px;color:var(--ink)}
+.pce{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:22px;margin-right:10px;flex:none}
 </style><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Oranienbaum&display=swap" rel="stylesheet">
 <script src="config.js"></script>
 </head><body>
@@ -121,11 +126,14 @@ header{flex-direction:column;align-items:center;justify-content:center;gap:2px;t
 <div id="adj" style="display:none"><label>Left / Right</label><input type="range" id="ax" min="-30" max="30" value="0"><label>Upar / Neeche</label><input type="range" id="ay" min="-30" max="30" value="0"><label>Size</label><input type="range" id="as" min="60" max="140" value="100"></div></div>
 <div class="card"><h2>Meri Try-On</h2>
 <label>Abhi laga hua</label><div id="wear" class="chips"></div>
-<div class="chips" style="margin-top:10px"><button class="chip" id="rs">↺ Sab hatao</button><button class="chip" id="del">🗑️ Photo hatao</button><button class="chip" data-act="savelook">💾 Look save karo</button></div>
+<div class="chips" style="margin-top:10px"><button class="chip" id="rs">↺ Sab hatao</button><button class="chip" id="del">🗑️ Photo hatao</button><button class="chip" data-act="savelook">💾 Look save karo</button><button class="chip" data-act="savephoto">📌 Photo save karo</button></div><p class="note" id="phs"></p>
 <label>Skin tone (color suggestions ke liye)</label><div id="tone"></div>
-<div class="two"><div><label>Height (cm)</label><input type="number" id="hh" min="120" max="220" value="170"></div><div><label>Weight (kg)</label><input type="number" id="ww" min="30" max="150" value="65"></div></div>
-<p class="note" id="sz"></p>
-<p class="note" style="margin-top:10px">Chashma, lipstick, bindi, bali aur necklace abhi try ho sakte hain. Kapdon ka AI try-on aur bracelet/payal baad mein aayenge.</p></div></div></section>
+<p class="note" style="margin-top:10px">Chashma, lipstick, bindi, bali aur necklace abhi try ho sakte hain. Kapdon ka AI try-on aur bracelet/payal baad mein aayenge.</p></div></div><div id="rec"></div>
+<div class="card"><h2>🔗 Kisi bhi product ka link</h2><p class="note">Amazon, Flipkart, Meesho, Myntra ya kisi bhi app ka product link paste karo, product ka type aur rang chuno, aur apni photo par try karo.</p>
+<input type="text" id="lku" inputmode="url" placeholder="Product link yahan paste karo" style="text-align:left"><div id="lks" class="note" style="margin-top:6px"></div>
+<label>Ye kya hai?</label><div class="chips" id="lkt"></div><label>Rang chuno</label><div id="lkc"></div>
+<div class="row" style="margin-top:10px"><button class="btn alt" style="flex:1" data-act="linktry">🧍 Try karo</button><button class="chip" data-act="linkbuy">🛒 Link kholo</button></div>
+<div id="lkl"></div><p class="note" style="margin-top:10px">Abhi product ki asli photo ya design copy nahi hota, sirf type aur rang se try hota hai. Asli product try-on (AI) baad mein aayega. Kapde aur bracelet/payal bhi baad mein.</p></div></section>
 
 <section class="sec" id="ac"><div id="acv"></div></section>
 </main></div>
@@ -176,15 +184,16 @@ $("#ht").textContent=A.store?A.store+(LANG=="en"?" products":" ke products"):t("
 function search(){const q=$("#sq").value.toLowerCase().trim(),r=PR.map((p,i)=>i).filter(i=>!q||(PR[i].n+" "+PR[i].s).toLowerCase().includes(q));
 $("#sh2").textContent=q?`"${q}" ke results (${r.length})`:"Sabhi products";$("#sg").innerHTML=r.length?r.map(card).join(""):`<p class="note">Kuch nahi mila. Doosra naam try karo.</p>`}
 
-function sheet(i){const p=PR[i],rows=PR.filter(x=>x.n==p.n).sort((a,b)=>a.p-b.p),m=rows[0].p;
-$("#sh").innerHTML=`<div class="row" style="align-items:center"><div class="im" style="width:84px;height:84px;font-size:38px;flex:none;background:${p.c1}22">${p.e}</div><div><h3>${p.n}</h3><div class="pz" style="font-size:20px">₹${p.p}</div><div class="sn" style="color:${STORES[p.s]}">${lg(p.s)}${p.s}</div></div></div>
-<button class="btn alt" style="width:100%;margin-top:14px;padding:14px" data-try="${i}">🧍 Try On (meri photo par)</button><div class="row" style="margin-top:8px"><button class="chip" style="flex:1" data-wish="${i}">${wl(i)?"♥ Wishlist se hatao":"♡ Wishlist mein jodo"}</button><button class="chip" style="flex:1" data-al="${i}">🔔 Price alert</button></div>
+function sheet(i){const p=PR[i],rows=PR.map((x,j)=>({x,j})).filter(o=>o.x.n==p.n).sort((a,b)=>a.x.p-b.x.p),m=rows[0].x.p;
+$("#sh").innerHTML=`<div class="row" style="align-items:center"><div class="im" style="width:84px;height:84px;font-size:38px;flex:none;background:${p.c1}22">${p.e}</div><div><h3>${p.n}</h3><div class="pz" style="font-size:20px">₹${m} se shuru</div></div></div>
+<button class="btn alt" style="width:100%;margin-top:14px;padding:14px" data-try="${i}">🧍 Try On (meri photo par)</button>
+<div class="row" style="margin-top:8px"><button class="chip" style="flex:1" data-wish="${i}">${wl(i)?"♥ Wishlist se hatao":"♡ Wishlist mein jodo"}</button><button class="chip" style="flex:1" data-al="${i}">🔔 Price alert</button></div>
 <h3 style="margin-top:16px">Description</h3><p class="note" style="font-size:13px">${DESC[p.n]}</p>
-<h3 style="margin-top:12px">Kis app mein kitni rating aur price</h3>`+rows.map(x=>`<div class="cmp"><span><b style="color:${STORES[x.s]}">${lg(x.s)}${x.s}</b><br><span class="rt">⭐ ${x.r} (${fc(x.c)} ratings)</span></span><span style="text-align:right"><b>₹${x.p}</b><br>${x.p==m?'<span class="best">Sabse sasta</span>':`<span class="rt">+₹${x.p-m} zyada</span>`}</span></div>`).join("")+`<button class="btn" style="width:100%;margin-top:14px;padding:14px" data-buy="${i}">🛒 ${p.s} par kharido</button><p class="note" style="text-align:center;margin-top:6px">Affiliate link: is link se kharidne par ShopyBuzz ko commission mil sakta hai. Aapko koi extra paisa nahi lagta.</p>`;$("#sheet").classList.add("on")}
-function wear(i){const p=PR[i];$("#sheet").classList.remove("on");tab("v");if(["set","top","bot"].includes(p.t)){toast("Kapdon ka asli AI try-on jald aayega (Phase 2)");return}if(p.t=="br"||p.t=="an"){toast("Bracelet/payal ke liye haath/pair ki photo wala try-on aage aayega");return}A.acc[p.t]=p.c1;const n=p.e+" "+p.n;A.worn=A.worn.filter(x=>x!=n).concat(n);if(!IMG)toast("Pehle apni photo upload karo");upd()}
+<h3 style="margin-top:12px">Kis app se kharidna hai? Chuno</h3>`+rows.map(({x,j})=>`<div class="cmp"><span>${lg(x.s,18)}<b style="color:${STORES[x.s]}">${x.s}</b><br><span class="rt">⭐ ${x.r} (${fc(x.c)} ratings)</span></span><span style="text-align:right"><b>₹${x.p}</b> ${x.p==m?'<span class="best">Sabse sasta</span>':`<span class="rt">+₹${x.p-m}</span>`}<br><button class="chip" style="margin-top:4px" data-buy="${j}">🛒 Kharido</button></span></div>`).join("")+`<p class="note" style="text-align:center;margin-top:10px">Affiliate link: is link se kharidne par ShopyBuzz ko commission mil sakta hai. Aapko koi extra paisa nahi lagta.</p>`;$("#sheet").classList.add("on")}
+function wear(i){const p=PR[i];TRIED=[p.n,...TRIED.filter(x=>x!=p.n)].slice(0,10);LS.s("tried",TRIED);$("#sheet").classList.remove("on");tab("v");if(["set","top","bot"].includes(p.t)){toast("Kapdon ka asli AI try-on jald aayega (Phase 2)");upd();return}if(p.t=="br"||p.t=="an"){toast("Bracelet/payal ke liye haath/pair ki photo wala try-on aage aayega");upd();return}A.acc[p.t]=p.c1;const n=p.e+" "+p.n;A.worn=A.worn.filter(x=>x!=n).concat(n);if(!IMG&&!LS.g("photo",null))toast("Pehle apni photo upload karo");upd()}
 
 const CH=[];const esc=s=>s.replace(/[<>&]/g,"");
-function chat(){$("#msgs").innerHTML=CH.length?CH.map(m=>`<div class="bb ${m.r}">${m.t}${m.ids?`<div class="chips" style="margin-top:8px">${m.ids.map(i=>`<button class="chip" data-p="${i}">${PR[i].e} ${PR[i].n}</button>`).join("")}</div>`:""}</div>`).join(""):`<div class="wel"><div style="font-size:40px">✨</div><h2>Aaj kya pehenna hai?</h2><p class="note">Main aapka AI fashion expert hoon. Fashion ke baare mein kuch bhi poochho: outfit, color, makeup, jewellery, size, trends.</p><div class="chips" style="justify-content:center">${["Kal party hai, kya pehnu?","Shaadi ke liye outfit","Office ke liye kya acha rahega?","Sabse sasta kya hai?"].map(t=>`<button class="chip" data-ex="${t}">${t}</button>`).join("")}</div></div>`;if(CH.length)scrollTo(0,document.body.scrollHeight)}
+function chat(){$("#msgs").innerHTML=CH.length?CH.map(m=>`<div class="bb ${m.r}">${m.t}${m.ids?[...new Set(m.ids.map(i=>PR[i].n))].map(n=>pcard(PR.findIndex(p=>p.n==n))).join(""):""}</div>`).join(""):`<div class="wel"><div style="font-size:40px">✨</div><h2>Aaj kya pehenna hai?</h2><p class="note">Main aapka AI fashion expert hoon. Fashion ke baare mein kuch bhi poochho: outfit, color, makeup, jewellery, size, trends.</p><div class="chips" style="justify-content:center">${["Kal party hai, kya pehnu?","Shaadi ke liye outfit","Office ke liye kya acha rahega?","Sabse sasta kya hai?"].map(t=>`<button class="chip" data-ex="${t}">${t}</button>`).join("")}</div></div>`;if(CH.length)scrollTo(0,document.body.scrollHeight)}
 function reply(v){v=v.toLowerCase();const pal=PAL[TONES[A.tone][2]],cl=`Aapke skin tone (${TONES[A.tone][0]}) par ${pal[0][0]}, ${pal[1][0]} aur ${pal[2][0]} achhe lagte hain.`;
 const S={wedding:["Shaadi ke liye rich colors aur gold jewellery best rahegi.",["Cotton Kurta Set","Kundan Bracelet","Pearl Necklace","Red Bindi Pack","Silver Payal Anklet"]],festival:["Festival ke liye kurta set ke saath bali aur bindi achhi lagegi.",["Cotton Kurta Set","Gold Hoop Earrings","Red Bindi Pack","Kundan Bracelet"]],office:["Office ke liye simple, neutral aur fitted kapde chuno.",["Slim Fit Chinos","Satin Party Shirt","Aviator Sunglasses"]],party:["Party ke liye thoda shiny aur bold look rakho.",["Sequin Co-ord Set","Satin Party Shirt","Gold Hoop Earrings","Matte Lipstick"]],casual:["Casual mein comfort pehle, phir color match.",["Round Tee","Denim Jacket","Slim Fit Chinos","Aviator Sunglasses"]]};
 let k=/shad|wedding|sangeet|mehndi/.test(v)?"wedding":/diwali|eid|holi|festival|puja|navratri/.test(v)?"festival":/office|meeting|interview/.test(v)?"office":/party|club|birthday/.test(v)?"party":/casual|college|roz/.test(v)?"casual":"";
@@ -213,24 +222,24 @@ if(a.bn){x.fillStyle=a.bn;x.beginPath();x.arc(k.brow.x,k.brow.y,k.ew*.045,0,6.29
 if(a.er){x.strokeStyle=a.er;x.fillStyle=a.er;x.lineWidth=k.ew*.025;[k.earL,k.earR].forEach(e=>{const y=e.y+k.fw*.14;x.beginPath();x.arc(e.x,y+k.ew*.07,k.ew*.07,0,6.29);x.stroke();x.beginPath();x.arc(e.x,y,k.ew*.025,0,6.29);x.fill()})}
 if(a.nk){x.fillStyle=a.nk;x.strokeStyle="rgba(0,0,0,.25)";x.lineWidth=1;for(let i=0;i<=18;i++){const t=i/18*Math.PI;x.beginPath();x.arc(k.chin.x-Math.cos(t)*k.fw*.5,k.chin.y+k.fw*.28+Math.sin(t)*k.fw*.3,k.fw*.022,0,6.29);x.fill();x.stroke()}}
 if(a.gl){x.strokeStyle="#222";x.lineWidth=k.ew*.035;x.fillStyle="rgba(20,20,30,.35)";[k.eL,k.eR].forEach(e=>{x.save();x.translate(e.x,e.y);x.rotate(k.roll);const w=k.ew*.5,h=k.ew*.36;x.beginPath();x.roundRect(-w/2,-h/2,w,h,h*.35);x.fill();x.stroke();x.restore()});const c=Math.cos(k.roll)*k.ew*.25,d=Math.sin(k.roll)*k.ew*.25;x.beginPath();x.moveTo(k.eL.x+c,k.eL.y+d);x.lineTo(k.eR.x-c,k.eR.y-d);x.stroke()}}
-function setImg(f){if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=async()=>{IMG=im;LMK=null;$("#ph").style.display="none";$("#cvs").style.display="block";$("#lm").textContent="Face dhundh raha hoon...";await loadLM();if(LM){try{const r=LM.detect(im);LMK=r.faceLandmarks&&r.faceLandmarks[0]||null}catch(e){LMK=null}}
-$("#adj").style.display=LMK?"none":"block";$("#lm").textContent=LMK?"Face mil gaya. Product chun kar Try On dabao.":(LMS=="fail"?"Auto face detection load nahi hua, isliye andaza se laga hai. Neeche ke sliders se sahi karo.":"Face nahi mila. Seedhi aur saaf photo try karo, ya neeche ke sliders use karo.");upd()};im.src=rd.result};rd.readAsDataURL(f)}
+let CURSRC=null;
+function useImg(src){const im=new Image();im.onload=async()=>{IMG=im;LMK=null;CURSRC=src;$("#ph").style.display="none";$("#cvs").style.display="block";$("#lm").textContent="Face dhundh raha hoon...";await loadLM();if(LM){try{const r=LM.detect(im);LMK=r.faceLandmarks&&r.faceLandmarks[0]||null}catch(e){LMK=null}}
+$("#adj").style.display=LMK?"none":"block";$("#lm").textContent=LMK?"Face mil gaya. Product chun kar Try On dabao.":(LMS=="fail"?"Auto face detection load nahi hua, isliye andaza se laga hai. Neeche ke sliders se sahi karo.":"Face nahi mila. Seedhi aur saaf photo try karo, ya neeche ke sliders use karo.");upd()};im.src=src}
+function setImg(f){if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,800/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);useImg(c.toDataURL("image/jpeg",.85))};im.src=rd.result};rd.readAsDataURL(f)}
 function upd(){$("#tone").innerHTML=TONES.map((t,i)=>`<span class="sw ${A.tone==i?"on":""}" style="background:${t[1]}" data-k="${i}" title="${t[0]}"></span>`).join("");
 $("#wear").innerHTML=A.worn.length?A.worn.map(w=>`<span class="chip on">${w}</span>`).join(""):`<span class="note">Abhi kuch nahi laga.</span>`;
-$("#sz").textContent="Andaza se size: "+(A.w<55?"S":A.w<70?"M":A.w<85?"L":"XL")+" (sahi size ke liye brand ka size chart dekho)";draw()}
-function tab(t){$$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t));$$(".sec").forEach(s=>s.classList.toggle("on",s.id==t));scrollTo(0,0);if(t=="v")upd();if(t=="ai")chat();if(t=="ac"){AC="menu";acc()}}
+$("#phs").textContent=LS.g("photo",null)?"✅ Saved photo istemaal ho rahi hai (sirf is phone mein save hai).":(IMG?"Ye photo abhi save nahi hai. Save karoge to har product isi par try hoga.":"");rec();draw()}
+function tab(t){$$("nav button").forEach(b=>b.classList.toggle("on",b.dataset.t==t));$$(".sec").forEach(s=>s.classList.toggle("on",s.id==t));scrollTo(0,0);if(t=="v"){loadSaved();upd()}if(t=="ai")chat();if(t=="ac"){AC="menu";acc()}}
 
 document.addEventListener("click",e=>{if(e.target==$("#sheet")){$("#sheet").classList.remove("on");return}
-const t=e.target.closest("[data-t],[data-s],[data-p],[data-try],[data-toast],[data-k],[data-ex],[data-buy],[data-wish],[data-al],[data-ac],[data-act]");if(!t)return;const d=t.dataset;
+const t=e.target.closest("[data-t],[data-s],[data-p],[data-try],[data-toast],[data-k],[data-ex],[data-buy],[data-wish],[data-al],[data-ac],[data-act],[data-lt],[data-lc]");if(!t)return;const d=t.dataset;
 if(d.t)tab(d.t);else if(d.s!==undefined){A.store=d.s||null;home()}else if(d.p!==undefined)sheet(+d.p)
 else if(d.try!==undefined)wear(+d.try);else if(d.toast)toast(d.toast);else if(d.k!==undefined){A.tone=+d.k;upd()}else if(d.ex)send(d.ex);else act(d,t)});
 $("#sq").oninput=search;$("#cs").onclick=()=>send($("#ci").value);$("#ci").onkeydown=e=>{if(e.key=="Enter")send(e.target.value)};
 $("#up").onchange=e=>setImg(e.target.files[0]);$("#cam").onchange=e=>setImg(e.target.files[0]);
-$("#hh").oninput=e=>{const v=+e.target.value;if(v>=120&&v<=220){A.h=v;upd()}};
-$("#ww").oninput=e=>{const v=+e.target.value;if(v>=30&&v<=150){A.w=v;upd()}};
 $("#ax").oninput=e=>{A.fx=+e.target.value;draw()};$("#ay").oninput=e=>{A.fy=+e.target.value;draw()};$("#as").oninput=e=>{A.fs=+e.target.value;draw()};
 $("#rs").onclick=()=>{A.acc={};A.worn=[];upd()};
-$("#del").onclick=()=>{IMG=null;LMK=null;$("#cvs").style.display="none";$("#ph").style.display="block";$("#adj").style.display="none";$("#lm").textContent="Photo hata di gayi.";upd()};
+$("#del").onclick=()=>{IMG=null;LMK=null;CURSRC=null;LS.s("photo",null);$("#cvs").style.display="none";$("#ph").style.display="block";$("#adj").style.display="none";$("#lm").textContent="Photo hata di gayi.";upd()};
 
 const LS={g(k,d){try{const v=JSON.parse(localStorage.getItem("sb_"+k));return v==null?d:v}catch(e){return d}},s(k,v){try{localStorage.setItem("sb_"+k,JSON.stringify(v))}catch(e){toast("Save nahi ho paya (storage band ya full)")}}};
 let WL=LS.g("wish",[]),LOOKS=LS.g("looks",[]),ORD=LS.g("ord",[]),ALR=LS.g("alr",[]),LANG=LS.g("lang","hi"),PREM=LS.g("prem",false),CHC=LS.g("chat",{d:"",n:0}),AC="menu";
@@ -245,7 +254,7 @@ if(window.SB_API)fetch(window.SB_API+"/api/products").then(r=>r.json()).then(L=>
 function setAlert(i){const n=PR[i].n,ex=ALR.find(a=>a.n==n);if(!ex&&!PREM&&ALR.length>=FL){toast(`Free mein ${FL} alerts. Premium mein unlimited`);return}const v=parseInt(prompt(`"${n}" abhi ₹${low(n)} se shuru. Kitne rupaye ya usse kam par alert chahiye?`,Math.max(1,low(n)-50)));if(!v||v<1)return;if(ex)ex.target=v;else ALR.push({n,target:v});LS.s("alr",ALR);toast(`Alert set: ₹${v} ya kam. Status Account mein dikhega`)}
 function saveLook(){if(!PREM&&LOOKS.length>=FLK){toast(`Free mein ${FLK} looks. Premium mein unlimited`);return}if(!A.worn.length){toast("Pehle koi product try karo");return}let img=null;if(IMG){const c=document.createElement("canvas"),sv=$("#cvs");c.width=160;c.height=Math.round(sv.height*160/sv.width);c.getContext("2d").drawImage(sv,0,0,c.width,c.height);img=c.toDataURL("image/jpeg",.6)}LOOKS.unshift({worn:[...A.worn],acc:{...A.acc},img,t:Date.now()});LS.s("looks",LOOKS);toast("Look save ho gaya")}
 function act(d,el){
-if(d.ac=="login")openLogin();else if(d.ac){tab("ac");AC=d.ac;acc()}
+if(d.lt){LK.type=d.lt;renderLink()}else if(d.lc){LK.color=d.lc;renderLink()}else if(d.ac=="login")openLogin();else if(d.ac){tab("ac");AC=d.ac;acc()}
 else if(d.wish!==undefined){toggleWish(+d.wish);if(el.closest("#sh"))sheet(+d.wish)}
 else if(d.al!==undefined)setAlert(+d.al);
 else if(d.buy!==undefined)buyIt(+d.buy);
@@ -262,7 +271,13 @@ else if(d.act=="otpverify")verifyOtp((($("#lgotp")||{}).value||"").replace(/\D/g
 else if(d.act=="emailchange"){LG.step="email";LG.err="";clearInterval(LGT);lgr()}
 else if(d.act=="skiplogin")skipLogin()
 else if(d.act=="logout"){TOKEN="";USER=null;LS.s("token","");LS.s("user",null);toast("Logout ho gaya");acc();gate(true)}
-else if(d.act=="wipe"){if(confirm("Wishlist, looks, orders, alerts aur premium sab hat jayega. Pakka?")){["wish","looks","ord","alr","lang","prem","chat","token","user"].forEach(k=>{try{localStorage.removeItem("sb_"+k)}catch(e){}});WL=[];LOOKS=[];ORD=[];ALR=[];LANG="hi";PREM=false;CHC={d:"",n:0};USER=null;TOKEN="";applyLang();acc();toast("Saara data hata diya")}}}
+else if(d.act=="savephoto"){if(!CURSRC)toast("Pehle photo chuno");else{LS.s("photo",CURSRC);upd();toast("Photo save ho gayi. Ab har product isi par try hoga")}}
+else if(d.act=="linktry"){const x=parseUrl(($("#lku")||{}).value||"");if(!x){toast("Pehle sahi product link paste karo (https:// se shuru)");return}const e={u:x.href,s:storeOf(x),t:LK.type,c:LK.color};LINKS=[e,...LINKS.filter(l=>l.u!=e.u||l.t!=e.t)].slice(0,20);LS.s("links",LINKS);applyLink(e);renderLink()}
+else if(d.act=="linkre"){if(LINKS[+d.j])applyLink(LINKS[+d.j])}
+else if(d.act=="linkopen"){if(LINKS[+d.j])window.open(LINKS[+d.j].u,"_blank","noopener")}
+else if(d.act=="linkdel"){LINKS.splice(+d.j,1);LS.s("links",LINKS);renderLink()}
+else if(d.act=="linkbuy"){const x=parseUrl(($("#lku")||{}).value||"");if(x)window.open(x.href,"_blank","noopener");else toast("Pehle sahi product link paste karo")}
+else if(d.act=="wipe"){if(confirm("Wishlist, looks, orders, alerts aur premium sab hat jayega. Pakka?")){["wish","looks","ord","alr","lang","prem","chat","token","user","photo","tried","links"].forEach(k=>{try{localStorage.removeItem("sb_"+k)}catch(e){}});WL=[];LOOKS=[];ORD=[];ALR=[];LANG="hi";PREM=false;CHC={d:"",n:0};USER=null;TOKEN="";applyLang();acc();toast("Saara data hata diya")}}}
 function acc(){const el=$("#acv"),B=`<button class="chip" data-ac="menu" style="margin-bottom:10px">${t("back")}</button>`,en=LANG=="en";let h="";
 if(AC=="menu"){h=`<div class="card"><h2>👤 ${en?"My Account":"Mera Account"} ${PREM?'<span class="chip on" style="padding:2px 8px;font-size:11px">⭐ Premium</span>':""}</h2>${USER?`<p class="note">✅ ${USER.email}</p><button class="chip" data-act="logout">Logout</button>`:`<p class="note">${en?"Guest user. Your data is saved only on this phone.":"Guest user. Aapka data sirf is phone mein save hai."}</p><button class="btn alt" data-ac="login">Login / Sign up</button>`}</div>
 <div class="card" style="background:#f9f5ec;border-color:#C9A96E;cursor:pointer" data-ac="prem"><b>⭐ ShopyBuzz Premium</b> · ₹99/${en?"month":"mahina"}<div class="note">${en?"No ads and more features. Tap to see.":"Ads hatao aur zyada features. Dekhne ke liye tap karo."}</div></div>
@@ -286,20 +301,39 @@ const lgr=()=>{if($("#lgo").classList.contains("on"))renderLogin();else acc()};
 function renderLogin(){const e=LG.err?`<p class="lgerr">${LG.err}</p>`:"",em=LG.step=="email";
 $("#lgbox").innerHTML=`<img class="lglogo" src="${LOGO()}" alt="ShopyBuzz"><p class="lgtag">Try it. Style it. Buy it.</p><h2 style="margin:22px 0 4px">${em?"Login ya Sign up":"OTP daalo"}</h2>`+(em?`<p class="note">Apna email daalo, hum 6 digit ka OTP bhejenge. Password nahi chahiye.</p><input type="email" id="lgemail" autocomplete="email" placeholder="aapka@email.com" value="${LG.email}"><button class="btn alt" style="width:100%;margin-top:12px;padding:14px" data-act="otpsend" ${LG.busy?"disabled":""}>${LG.busy?"Bhej raha hoon...":"OTP bhejo"}</button>${e}${REQ?"":`<button class="lgskip" data-act="skiplogin">Abhi skip karo, guest ke roop mein dekho</button>`}`:`<p class="note">OTP bheja gaya: <b>${LG.email}</b><br>Inbox aur Spam dono check karo. 10 minute tak chalega.</p><input type="text" id="lgotp" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="6 digit OTP" style="letter-spacing:8px;font-size:22px"><button class="btn alt" style="width:100%;margin-top:12px;padding:14px" data-act="otpverify" ${LG.busy?"disabled":""}>${LG.busy?"Check kar raha hoon...":"Verify karo"}</button>${e}<div class="chips" style="justify-content:center;margin-top:12px"><button class="chip" id="lgre" data-act="otpresend">${LG.cd>0?"Dobara bhejo ("+LG.cd+"s)":"OTP dobara bhejo"}</button><button class="chip" data-act="emailchange">Email badlo</button></div>`)+`<p class="note" style="margin-top:22px;font-size:11px">Aapki email sirf login ke liye use hoti hai.</p>`;
 if(!em)setTimeout(()=>{const i=$("#lgotp");if(i&&i.focus)i.focus()},60)}
-function openLogin(){if(!window.SB_API){toast("Login abhi available nahi hai");return}if(LG.step!="otp")LG={step:"email",email:LG.email||"",err:"",cd:0,busy:false};$("#lgo").classList.add("on");renderLogin()}
+function openLogin(){if(!window.SB_API){toast(typeof window.SB_API==="undefined"?"Login: config.js load nahi hui. File ka naam, jagah aur quotes check karo.":"Login: config.js mein SB_API khaali hai. API link daalo.");return}if(LG.step!="otp")LG={step:"email",email:LG.email||"",err:"",cd:0,busy:false};$("#lgo").classList.add("on");renderLogin()}
 function closeLogin(){$("#lgo").classList.remove("on")}
 function skipLogin(){try{sessionStorage.setItem("sb_skip","1")}catch(e){}closeLogin()}
 function gate(force){if(!window.SB_API||USER)return;if(!force){try{if(sessionStorage.getItem("sb_skip"))return}catch(e){}}if(force)try{sessionStorage.removeItem("sb_skip")}catch(e){}openLogin()}
 function welcome(mail){closeLogin();const w=$("#wel");w.classList.remove("out");w.innerHTML=`<div class="wc"><svg class="chk" viewBox="0 0 52 52"><circle class="cc" cx="26" cy="26" r="24"/><path class="cp" d="M14 27l8 8 16-17"/></svg><div class="wt1">Welcome to</div><img class="wlogo" src="${LOGO()}" alt="ShopyBuzz"><div class="wt2">${String(mail||"").replace(/[<>&]/g,"")}</div></div>`+'<i class="sp"></i>'.repeat(8);w.classList.add("on");
 const done=()=>{w.classList.add("out");setTimeout(()=>w.classList.remove("on","out"),600)};clearTimeout(welcome.t);welcome.t=setTimeout(done,3600);w.onclick=()=>{clearTimeout(welcome.t);done()}}
 document.addEventListener("keydown",e=>{if(e.key!="Enter")return;const id=e.target&&e.target.id;if(id=="lgemail")act({act:"otpsend"},e.target);else if(id=="lgotp")act({act:"otpverify"},e.target)});
-async function sendOtp(){if(!window.SB_API){LG.err="Login abhi available nahi hai (server nahi juda).";lgr();return}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(LG.email)){LG.err="Sahi email daalo.";lgr();return}
+const GRP={er:"j",nk:"j",br:"j",an:"j",bn:"j",gl:"f",lip:"f",set:"c",top:"c",bot:"c"};
+let TRIED=LS.g("tried",[]),LINKS=LS.g("links",[]),LK={type:"gl",color:"#111111"},loadedSaved=false;
+function loadSaved(){if(IMG||loadedSaved)return;const sp=LS.g("photo",null);if(sp){loadedSaved=true;useImg(sp)}}
+const byName=n=>PR.map((p,i)=>({p,i})).filter(o=>o.p.n==n).sort((a,b)=>a.p.p-b.p.p);
+function pcard(i){const rows=byName(PR[i].n),f=rows[0].p,m=f.p;return `<div class="pcc"><div class="row" style="align-items:center"><div class="pce" style="background:${f.c1}22">${f.e}</div><div style="flex:1"><b>${f.n}</b></div><button class="chip" data-try="${rows[0].i}">🧍 Try On</button></div>`+rows.map(({p,i:x})=>`<div class="cmp"><span>${lg(p.s)}<b style="color:${STORES[p.s]}">${p.s}</b> <span class="rt">⭐ ${p.r}</span></span><span><b>₹${p.p}</b> ${p.p==m?'<span class="best">Sasta</span>':""} <button class="chip" data-buy="${x}">Kharido</button></span></div>`).join("")+`</div>`}
+function rec(){const el=$("#rec");if(!el)return;let h="";
+if(TRIED.length){const last=PR[cheap(TRIED[0])];h+=`<div class="card"><h3>🕘 Pehle try kiye hue (ek tap mein dobara try)</h3><div class="chips">${TRIED.map(n=>`<button class="chip" data-try="${cheap(n)}">${PR[cheap(n)].e} ${n}</button>`).join("")}</div></div>`;
+const names=[...new Set(PR.map(p=>p.n))].filter(n=>n!=last.n&&!TRIED.slice(0,3).includes(n)),same=names.filter(n=>GRP[PR[cheap(n)].t]==GRP[last.t]),sim=[...same,...names.filter(n=>!same.includes(n))].slice(0,3);
+if(sim.length)h+=`<div class="card"><h3>✨ ${last.e} ${last.n} jaisa aur</h3>${sim.map(n=>pcard(cheap(n))).join("")}</div>`}
+el.innerHTML=h}
+const LTYPES=[["gl","🕶️ Chashma"],["lip","💄 Lipstick"],["bn","🔴 Bindi"],["er","✨ Bali"],["nk","📿 Necklace"]],LCOLS=["#111111","#B3203B","#D4AF37","#C0C0C0","#F4F1EA","#2457C5","#0B6E4F","#C2185B","#7A1F3D","#8E7CC3"];
+const tn=t=>(LTYPES.find(x=>x[0]==t)||[0,t])[1];
+function parseUrl(u){try{const x=new URL(String(u).trim());return/^https?:$/.test(x.protocol)?x:null}catch(e){return null}}
+function storeOf(x){const h=x.hostname.toLowerCase();return/amazon|amzn/.test(h)?"Amazon":/flipkart|fkrt/.test(h)?"Flipkart":/meesho/.test(h)?"Meesho":/myntra/.test(h)?"Myntra":h.replace(/^www\./,"")}
+function linkStore(){const v=($("#lku")||{}).value||"",x=parseUrl(v);$("#lks").innerHTML=!v.trim()?"":x?`${lg(storeOf(x))}✅ <b>${storeOf(x)}</b> ka link mila`:"⚠️ Ye sahi link nahi lag raha (https:// se shuru hona chahiye)"}
+function renderLink(){$("#lkt").innerHTML=LTYPES.map(([k,l])=>`<button class="chip ${LK.type==k?"on":""}" data-lt="${k}">${l}</button>`).join("");$("#lkc").innerHTML=LCOLS.map(c=>`<span class="sw ${LK.color==c?"on":""}" style="background:${c}" data-lc="${c}"></span>`).join("");
+$("#lkl").innerHTML=LINKS.length?`<h3 style="margin-top:14px">Saved links</h3>`+LINKS.map((l,j)=>`<div class="cmp"><span>${lg(l.s)}<b>${l.s}</b> · ${tn(l.t)}<span class="sw" style="background:${l.c};width:14px;height:14px;margin:0 0 0 6px;vertical-align:-2px"></span></span><span><button class="chip" data-act="linkre" data-j="${j}">Try</button> <button class="chip" data-act="linkopen" data-j="${j}">Link</button> <button class="chip" data-act="linkdel" data-j="${j}">🗑️</button></span></div>`).join(""):""}
+function applyLink(e){A.acc[e.t]=e.c;const n="🔗 "+e.s+" "+tn(e.t);A.worn=A.worn.filter(x=>x!=n).concat(n);tab("v");if(!IMG&&!LS.g("photo",null))toast("Pehle apni photo upload karo");upd()}
+async function sendOtp(){if(!window.SB_API){LG.err=typeof window.SB_API==="undefined"?"Login: config.js load nahi hui. File ka naam, jagah aur quotes check karo.":"Login: config.js mein SB_API khaali hai. API link daalo.";lgr();return}if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(LG.email)){LG.err="Sahi email daalo.";lgr();return}
 LG.busy=true;LG.err="";lgr();try{const{ok,d}=await authCall("/api/auth/request",{email:LG.email});LG.busy=false;if(ok){LG.step="otp";LG.err="";startCd(45)}else LG.err=d.message||"OTP nahi bhej paye. Dobara try karo."}catch(e){LG.busy=false;LG.err="Server se connect nahi hua. Internet check karo."}lgr()}
 async function verifyOtp(code){if(code.length!=6){LG.err="6 digit ka OTP daalo.";lgr();return}LG.busy=true;LG.err="";lgr();
 try{const{ok,d}=await authCall("/api/auth/verify",{email:LG.email,otp:code});LG.busy=false;if(ok&&d.token){TOKEN=d.token;USER={email:d.email};LS.s("token",TOKEN);LS.s("user",USER);clearInterval(LGT);LG={step:"email",email:"",err:"",cd:0,busy:false};AC="menu";welcome(d.email)}else LG.err=d.message||"OTP galat hai."}catch(e){LG.busy=false;LG.err="Server se connect nahi hua. Internet check karo."}lgr()}
 if(TOKEN&&window.SB_API)fetch(window.SB_API+"/api/me",{headers:{Authorization:"Bearer "+TOKEN}}).then(r=>{if(r.status==401){TOKEN="";USER=null;LS.s("token","");LS.s("user",null);if(AC=="menu")acc();gate()}}).catch(()=>{});
 applyLang();
 home();search();
+renderLink();$("#lku").oninput=linkStore;
 gate();
 </script><script>if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("/sw.js").catch(()=>{}))</script>
 </body></html>
